@@ -1,0 +1,18 @@
+# Go
+bin/
+*.test
+coverage.out
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# R
+.Rhistory
+.RData
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
