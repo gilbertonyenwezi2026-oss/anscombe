@@ -59,16 +59,7 @@ This demonstrates:
 
 ## Results
 
-### **1. Statistical Accuracy Comparison**
-
-| Metric             | Go (montanaflynn/stats) | Python (Statsmodels) | R (lm) | Result  |
-| ------------------ | ----------------------- | -------------------- | ------ | ------- |
-| Intercept (avg)    | ~3.00                   | ~3.00                | ~3.00  | ✅ Match |
-| Slope (avg)        | ~0.50                   | ~0.50                | ~0.50  | ✅ Match |
-| Correlation (r)    | ~0.82                   | ~0.82                | ~0.82  | ✅ Match |
-| Output Consistency | High                    | High                 | High   | ✅ Match |
-
-All three languages produced **identical regression outputs**
+### Statistical Accuracy
 
 | Dataset | Intercept | Slope | r     | R²     |
 |--------|----------|-------|---------|--------|
@@ -81,33 +72,31 @@ Results are **consistent across Go, Python, and R**
 
 ---
 
-### **2. Performance Benchmark (Execution Time)**
+### Go Benchmark Results (Execution Time)
 
-| Language | Avg Time per Run (ms) | Total Time (10k runs) | Relative Speed |
-| -------- | --------------------- | --------------------- | -------------- |
-| Go       | 0.08 ms               | 0.8 sec               | 🥇 Fastest     |
-| Python   | 0.25 ms               | 2.5 sec               | 🥈 Medium      |
-| R        | 0.40 ms               | 4.0 sec               | 🥉 Slowest     |
+Benchmarks were executed in an unrestricted Linux environment.
+
+| Benchmark                    | ns/op | B/op | allocs/op |
+|------------------------------|------:|-----:|----------:|
+| BenchmarkRunQuartet          | 152.5 |  0   | 0         |
+| BenchmarkStatsPackageQuartet | 1527  | 2496 | 16        |
+
+**Interpretation:**  
+The custom Go OLS implementation significantly outperforms the external stats-package wrapper. It achieves extremely low latency and zero memory allocation, making it highly suitable for high-throughput production workloads.
 
 
-| Language | Execution Time             | Memory Usage  |   Rank   |
-|----------|----------------------------|---------------|----------|
-| Go       | Fastest (benchmark results)| Lowest        |    🥇   |
-| Python   | 0.010 sec                  | ~12 KB        |    🥈   |
-| R        | 0.492 sec                  | Higher        |    🥉   |
+### Cross-Language Performance Summary
+
+| Language / Implementation     | Execution Time | Memory / Allocations    | Notes                                  |
+|-------------------------------|---------------:|-------------------------|----------------------------------------|
+| Go (custom OLS benchmark)     | 152.5 ns/op    | 0 B/op, 0 allocs/op     | Fastest and most efficient             |
+| Go (stats package benchmark)  | 1527 ns/op     | 2496 B/op, 16 allocs/op | Correct but less efficient             |
+| Python                        | 0.010236 sec   | 12,164 bytes peak       | Very fast, strong usability            |
+| R                             | 0.492317 sec   | Not captured locally    | Correct but slowest in this comparison |
 
 ---
 
-### **3. Memory Usage Comparison**
-
-| Language | Avg Memory Usage (MB) | Efficiency        |
-| -------- | --------------------- | ----------------- |
-| Go       | ~15 MB                | 🥇 Most Efficient |
-| Python   | ~50 MB                | 🥈 Moderate       |
-| R        | ~70 MB                | 🥉 Highest        |
-
-
-### **4. Developer Productivity & Ecosystem (Qualitative)**
+### Developer Productivity & Ecosystem (Qualitative)
 
 | Category             | Go        | Python                       | R                     |
 | -------------------- | --------- | ---------------------------- | --------------------- |
@@ -161,17 +150,15 @@ Despite identical regression outputs, the Anscombe Quartet demonstrates:
 
 ## Environment Notes
 
-Local execution on a managed Windows machine was partially restricted by **Application Control policies**, which blocked execution of Go test binaries and R scripts.
+Local execution on a managed Windows system was partially restricted by **Application Control policies**, which blocked execution of temporary Go test binaries and R scripts.
 
-Testing and benchmarking were validated using:
-- Alternative environments (cloud/local)
-- Cross-language consistency (Python & R)
+Final benchmarking and validation were completed in an **unrestricted Linux environment**, ensuring accurate performance measurements.
 
 ---
 
 ## Final Conclusion
 
-Go is statistically accurate and highly performant, making it well-suited for production analytics systems. However, Python and R remain superior for exploratory analysis and advanced modeling. A hybrid approach maximizes both performance and analytical capability 
+Benchmarking confirms that Go is the strongest language in this comparison for raw execution efficiency. The custom OLS implementation was an order of magnitude faster than the external Go stats-package wrapper and dramatically faster than the Python and R script timings collected for the same problem. However, Python and R remain more convenient for exploratory analysis and modeling. These findings support a hybrid recommendation: use Go for production-grade analytics and backend services, while retaining Python and R for data science workflows that require rapid experimentation, visualization, and richer statistical ecosystems.
 
 ---
 
@@ -198,56 +185,158 @@ Do not fully replace Python/R with Go. Instead, adopt a hybrid strategy. Go can 
 
 ```text
 anscombe/
-├── .github/workflows/
-├── data/
-│   └── anscombe.csv
-├── go/
+│── go/
 │   ├── anscombe/
 │   │   ├── data.go
 │   │   ├── regression.go
-│   │   └── regression_test.go
-│   ├── go.mod
-│   └── main.go
-├── python/
-│   └── anscombe.py
-├── r/
-│   └── anscombe.R
-├── scripts/
-│   └── run_all.sh
-├── .gitignore
-└── README.md
+│   │   ├── regression_test.go
+│
+│── python/
+│   ├── anscombe.py
+│
+│── r/
+│   ├── anscombe.R
+│
+│── data/
+│   ├── anscombe.csv
+│
+│── results/
+│   ├── go-benchmark.txt
+│   ├── python-output.txt
+│   ├── r-output.txt
+│
+│── README.md
 ```
 ---
 
 ## File-by-File Guide
 
-### `data/anscombe.csv`
-Shared input data for all three implementations. Contains the four Anscombe Quartet datasets in a consistent format for reproducible testing.
+🟦 /go/ — Go Implementation
+go/main.go
+ - Entry point for the Go application
+ - Loads the Anscombe datasets
+ - Executes regression using:
+ - Custom OLS implementation
+ - External stats package
+ - Prints regression results for comparison
 
-### `go/anscombe/data.go`
-Defines and loads the Anscombe Quartet datasets for the Go implementation.
+👉 Purpose: Demonstrates Go-based statistical computation
 
-### `go/anscombe/regression.go`
-Implements ordinary least squares regression logic and includes a comparison wrapper for `github.com/montanaflynn/stats`.
+go/anscombe/data.go
+ - Defines the Dataset struct
+ - Stores all four Anscombe datasets
+ - Provides the Quartet() function to access data
 
-### `go/anscombe/regression_test.go`
+👉 Purpose: Centralized, reusable data source for all Go computations
+
+go/anscombe/regression.go
+Implements:
+ - Custom OLS regression function
+ - Wrapper for external stats package (montanaflynn/stats)
+Computes:
+ - Intercept
+ - Slope
+ - Correlation (r)
+ - R²
+
+👉 Purpose: Core statistical logic of the project
+
+go/anscombe/regression_test.go
 Contains:
-- unit tests for regression correctness
-- coefficient comparison checks
-- Go benchmark functions using `go test -bench`
-- memory reporting with `-benchmem`
+ - Unit tests for regression correctness
+ - Cross-validation between OLS and stats package
+ - Benchmark functions
+Key functions:
+ - TestOLSMatchesKnownCoefficients
+ - TestStatsPackageMatchesOLS
+ - BenchmarkRunQuartet
+ - BenchmarkStatsPackageQuartet
 
-### `go/main.go`
-Runs the Go solution and prints regression outputs in readable form. Can also be used to inspect values before running formal tests.
+👉 Purpose: Ensures correctness and measures performance
 
-### `python/anscombe.py`
-Python reference implementation. Intended to confirm the Go results using Python statistical tooling.
+go/go.mod
+ - Defines Go module name and dependencies
+Includes external package:
+ - github.com/montanaflynn/stats
 
-### `r/anscombe.R`
-R reference implementation using `lm()` to confirm expected regression coefficients.
+👉 Purpose: Dependency management and reproducibility
 
-### `scripts/run_all.sh`
-Convenience script that runs the Go, Python, and R implementations in sequence.
+🟨 /python/ — Python Implementation
+python/anscombe.py
+ - Loads Anscombe datasets
+Performs regression using:
+ - numpy
+ - statsmodels
+Outputs:
+ - Intercept
+ - Slope
+ - Correlation
+ - R²
+Measures:
+ - Execution time
+ - Memory usage
+
+👉 Purpose: Baseline comparison for Go results
+
+🟩 /r/ — R Implementation
+r/anscombe.R
+ - Performs regression using R’s lm() function
+Outputs:
+ - Intercept
+ - Slope
+ - Correlation
+ - R²
+ - Measures execution time
+
+👉 Purpose: Statistical reference implementation
+
+🟪 /data/ — Shared Dataset
+data/anscombe.csv
+Contains all four datasets in structured format
+Used for consistency across languages
+
+👉 Purpose: Single source of truth for data
+
+🟥 /results/ — Output & Benchmark Results
+results/go-benchmark.txt
+
+Contains Go benchmark output from:
+
+go test -bench=. -benchmem
+
+👉 Includes:
+
+Execution time (ns/op)
+Memory usage (B/op)
+Allocation counts
+results/python-output.txt
+Contains Python regression output
+Includes:
+Statistical results
+Execution time
+Memory usage
+results/r-output.txt
+Contains R regression output
+Includes:
+Statistical results
+Execution time
+
+👉 Purpose: Enables reproducibility and comparison
+
+🟫 /scripts/ — Execution Helpers
+scripts/run_all.sh
+Bash script to run:
+Go tests and benchmarks
+Python script
+R script
+
+👉 Purpose: One-command execution for Unix-based systems
+
+⚠️ Note:
+
+Designed for macOS/Linux environments
+Windows users should run commands manually or via Git Bash
+
 
 ---
 

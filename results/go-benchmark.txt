@@ -1,0 +1,8 @@
+goos: linux
+goarch: amd64
+pkg: github.com/your-username/anscombe-go-python-r/go/anscombe
+cpu: AMD EPYC 7763 64-Core Processor
+BenchmarkRunQuartet-2            9586909      152.5 ns/op       0 B/op       0 allocs/op
+BenchmarkStatsPackageQuartet-2    895669     1527 ns/op      2496 B/op      16 allocs/op
+PASS
+ok      github.com/your-username/anscombe-go-python-r/go/anscombe       3.009s

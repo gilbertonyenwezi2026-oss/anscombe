@@ -1,0 +1,53 @@
+$`Set I`
+$`Set I`$intercept
+[1] 3.000091
+
+$`Set I`$slope
+[1] 0.5000909
+
+$`Set I`$r
+[1] 0.8164205
+
+$`Set I`$r_squared
+[1] 0.6665425
+
+$`Set II`
+$`Set II`$intercept
+[1] 3.000909
+
+$`Set II`$slope
+[1] 0.5
+
+$`Set II`$r
+[1] 0.8162365
+
+$`Set II`$r_squared
+[1] 0.666242
+
+$`Set III`
+$`Set III`$intercept
+[1] 3.002455
+
+$`Set III`$slope
+[1] 0.4997273
+
+$`Set III`$r
+[1] 0.8162867
+
+$`Set III`$r_squared
+[1] 0.666324
+
+$`Set IV`
+$`Set IV`$intercept
+[1] 3.001727
+
+$`Set IV`$slope
+[1] 0.4999091
+
+$`Set IV`$r
+[1] 0.8165214
+
+$`Set IV`$r_squared
+[1] 0.6667073
+
+elapsed_seconds=0.492317
