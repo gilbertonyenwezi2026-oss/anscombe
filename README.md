@@ -292,8 +292,8 @@ Outputs:
 
 🟪 /data/ — Shared Dataset
 data/anscombe.csv
-Contains all four datasets in structured format
-Used for consistency across languages
+ - Contains all four datasets in structured format
+ - Used for consistency across languages
 
 👉 Purpose: Single source of truth for data
 
@@ -305,38 +305,35 @@ Contains Go benchmark output from:
 go test -bench=. -benchmem
 
 👉 Includes:
-
-Execution time (ns/op)
-Memory usage (B/op)
-Allocation counts
+ - Execution time (ns/op)
+ - Memory usage (B/op)
+ - Allocation counts
 results/python-output.txt
-Contains Python regression output
+ - Contains Python regression output
 Includes:
-Statistical results
-Execution time
-Memory usage
+ - Statistical results
+ - Execution time
+ - Memory usage
 results/r-output.txt
-Contains R regression output
+ - Contains R regression output
 Includes:
-Statistical results
-Execution time
+ - Statistical results
+ - Execution time
 
 👉 Purpose: Enables reproducibility and comparison
 
 🟫 /scripts/ — Execution Helpers
 scripts/run_all.sh
 Bash script to run:
-Go tests and benchmarks
-Python script
-R script
+ - Go tests and benchmarks
+ - Python script
+ - R script
 
 👉 Purpose: One-command execution for Unix-based systems
 
 ⚠️ Note:
-
-Designed for macOS/Linux environments
-Windows users should run commands manually or via Git Bash
-
+ - Designed for macOS/Linux environments
+ - Windows users should run commands manually or via Git Bash
 
 ---
 
@@ -403,5 +400,6 @@ That is the key property of the Anscombe Quartet and the core reason it is usefu
 **Gilbert Onyenwezi**  
 MSDS 431 - GO & AI Programming  
 Northwestern University
-
-
+School of Professional Studies
+Masters in Data Science - Data Engineering Specialization
+2026
