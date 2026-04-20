@@ -398,8 +398,8 @@ That is the key property of the Anscombe Quartet and the core reason it is usefu
 ## Author
 
 **Gilbert Onyenwezi**  
-MSDS 431 - GO & AI Programming  
-Northwestern University
-School of Professional Studies
-Masters in Data Science - Data Engineering Specialization
-2026
+ - MSDS 431 - GO & AI Programming  
+ - Northwestern University
+ - School of Professional Studies
+ - Masters in Data Science - Data Engineering Specialization
+ - 2026
